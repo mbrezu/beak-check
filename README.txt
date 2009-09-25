@@ -1,3 +1,4 @@
+
 Beak-Check - A type-testing library for Clojure.
 
 This is a 'type predicate combinator' library that makes it easier
@@ -80,10 +81,42 @@ false
 (where 'fewer-than' is a TP that checks that the data structure is
 a collection and has less than a given number of items).
 
-There are more combinators that deal with structs and maps, see
-below for examples.
+An example of 'struct testing':
+user=> (defstruct <person> :name :age)
+#'user/<person>
+user=> ((has-keys :name) (struct <person>))
+true
+user=> ((is-struct <person>) 10)
+false
+user=> ((is-struct <person>) {:name "John" :age 20})
+false
+user=> ((is-struct <person>) (struct <person> "John" 20))
+true
+user=> ((is-struct <person>) (struct <person> 10 20))
+true
+user=> ((like-struct <person>) (struct-map <person> :name "John" :age 20 :other 1))
+true
+user=> ((like-struct <person>) #{1 2 3})
+false
+user=> ((like-struct <person>) {:name "John" :age 1})
+false
+user=> ;; nullable used just to show how it works
+user=> (def is-person
+            (check-all (is-struct <person>)
+                       (with-values-for
+                         :name (nullable (instance-of String))
+                         :age (instance-of Integer))))
+#'user/is-person
+false
+user=> (is-person (struct <person> "John" 20))
+true
+user=> (is-person (struct <person> nil 20))
+true
+user=> (is-person (struct <person> 10 20))
+false
 
 Main caveat of Beak-Check: poor error reporting (TPs only return 'true' or
 'false', probably the 'false' case should be more detailed).
 
-More examples and tests are found in the source code.
+There are more combinators that deal with structs and maps; more
+examples in the source code.
