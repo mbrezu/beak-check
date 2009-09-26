@@ -107,7 +107,6 @@ user=> (def is-person
                          :name (nullable (instance-of String))
                          :age (instance-of Integer))))
 #'user/is-person
-false
 user=> (is-person (struct <person> "John" 20))
 true
 user=> (is-person (struct <person> nil 20))
