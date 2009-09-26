@@ -30,6 +30,14 @@
   (is (= true ((check-all (vector-of (instance-of Integer)) (fewer-than 3)) [1 2])))
   (is (= false ((check-all (vector-of (instance-of Integer)) (fewer-than 3)) [1 nil]))))
 
+(deftest test-fewer-than
+  (is (= true ((fewer-than 3) [1 2])))
+  (is (= false ((fewer-than 3) [1 2 3 4 5]))))
+
+(deftest test-more-than
+  (is (= false ((more-than 3) [1 2])))
+  (is (= true ((more-than 3) [1 2 3 4 5]))))
+
 (defstruct <person> :name :age)
 
 (deftest test-has-keys
